@@ -1,14 +1,14 @@
-#Clase de agrupamiento de categorías dentro de factores.
-#Modelo de regresión con predictores categóricos (ANOVA)
-#Este ejercicio ilustra el agrupamiento de categorías dentro de un factor
-#auxiliándose de las funciones anova() y contrasts().
+#Clase de agrupamiento de categorÃ­as dentro de factores.
+#Modelo de regresiÃ³n con predictores categÃ³ricos (ANOVA)
+#Este ejercicio ilustra el agrupamiento de categorÃ­as dentro de un factor
+#auxiliÃ¡ndose de las funciones anova() y contrasts().
 
 #Fuente de la base de datos:
 #Exam PA (Predictive Analytics) June 13, 2019 Project
 #Report Template de la Society of Actuaries (SOA):
 #https://www.soa.org/globalassets/assets/files/edu/2019/exam-pa-06-14-model-solution.pdf
 
-#Obsérevese que el objetivo de este ejercicio es diferente al 
+#ObsÃ©revese que el objetivo de este ejercicio es diferente al 
 #del ejercicio de la fuente original.
 
 getwd()
@@ -16,7 +16,7 @@ ls()
 rm(list=ls())
 options(digits=2, width = 140)
 
-crash = read.csv("C:\\Users\\Yanely\\Documents\\2021-1\\Aprendizaje Estadístico Automatizado - Seminario de Estadística\\June_13_data.csv")
+crash = read.csv("C:\\Users\\Yanely\\Documents\\2021-1\\Aprendizaje EstadÃ­stico Automatizado - Seminario de EstadÃ­stica\\June_13_data.csv")
 str(crash)
 
 library(MASS)
@@ -25,7 +25,7 @@ library(MASS)
 par(mfrow=c(1,1))
 hist(crash$Crash_Score, breaks = 70,probability = T)
 
-#Trabajaremos con una selección de cuatro variables explicativas,
+#Trabajaremos con una selecciÃ³n de cuatro variables explicativas,
 # tipo factor. 
 crashB=crash[,c(1,4,5,8,13)]
 str(crashB)
@@ -53,39 +53,39 @@ str(crashB)
 
 #Traffic_Control: "NONE", "OTHER", "SIGNAL", "STOP SIGNAL", "YIELD".
 
-#--------Distribución de las observaciones por grupos---------
+#--------DistribuciÃ³n de las observaciones por grupos---------
 
-#Veamos la distribución de  las observaciones por categoría de cada factor.
+#Veamos la distribuciÃ³n de  las observaciones por categorÃ­a de cada factor.
 aux=list() #objeto tipo lista
 for(i in 2:5) {aux[[i-1]]=table(crashB[,i])}
 print(aux[[1]])
 print(lapply(1:4, function(i){aux[[i]]}))
 
-# Número total de grupos, tablas cruzadas o crosstabs:
+# NÃºmero total de grupos, tablas cruzadas o crosstabs:
 
 table(crashB[,3])   #Table 1x5 cells
 #Crosstab 6x5x5x5=750 cells, se imprimen 25 tablas bidimensionales de 6x5
 (Frecs=table(crashB[,2:5])) 
-#(xt=xtabs(~crashB[,2]+crashB[,3]+crashB[,4]+crashB[,5])) #ídem
+#(xt=xtabs(~crashB[,2]+crashB[,3]+crashB[,4]+crashB[,5])) #Ã­dem
 
 #Veamos las medias, varianzas de la variable respuesta dentro de cada celda.
 mean(crashB[,1]) #6.6 Media global de la variable respuesta Y
 tapply(crashB[,1], crashB[,2], mean) #Medias Y  por grupo (var 2)
 Sum=tapply(crashB[,1], crashB[,2:5],sum) #Suma de Y por celda en la tabla de 6x5x5x5=750 celdas 
 Means=tapply(crashB[,1], crashB[,2:5],mean) #Media de Y por celda en la tabla de 6x5x5x5=750 celdas 
-#Means=tapply(crashB[,1], list(crashB[,2],crashB[,3],crashB[,4],crashB[,5]),mean) ídem
+#Means=tapply(crashB[,1], list(crashB[,2],crashB[,3],crashB[,4],crashB[,5]),mean) Ã­dem
 Vars=tapply(crashB[,1], crashB[,2:5],var)
 str(Means)
 
-#Por ejemplo, cuando cada factor toma la primer categoría:
+#Por ejemplo, cuando cada factor toma la primer categorÃ­a:
 Frecs[1,1,1,1]; Sum[1,1,1,1]; Means[1,1,1,1]; Vars[1,1,1,1]
-Frecs[1,2,2,4]; Sum[1,2,2,4]; Means[1,2,2,4]; Vars[1,2,2,4] #otras categorías
-Frecs[6,5,5,5]; Sum[6,5,5,5]; Means[6,5,5,5]; Vars[6,5,5,5] #última categoría
+Frecs[1,2,2,4]; Sum[1,2,2,4]; Means[1,2,2,4]; Vars[1,2,2,4] #otras categorÃ­as
+Frecs[6,5,5,5]; Sum[6,5,5,5]; Means[6,5,5,5]; Vars[6,5,5,5] #Ãºltima categorÃ­a
 
 SD=sqrt(Vars)
 dev.off()
 
-#Veamos la distribución de la media y varianza por celda.
+#Veamos la distribuciÃ³n de la media y varianza por celda.
 par(mfrow=c(2,2)) 
 plot(Means,Vars, xlab="Cell means", ylab="Cell variances", pch=19, cex=.2)
 plot(Means,SD, xlab="Cell means", ylab="Cell Std Devn.", pch=19, cex=.2)
@@ -93,31 +93,31 @@ plot(Means[Means <14],Vars[Means <14], xlab="Cell means <14", ylab="Cell varianc
 plot(Means[Means <14],SD[Means <14], xlab="Cell means <14", ylab="Cell Std Devn.", pch=19, cex=.2)
 
 (auxMeans=as.vector(Means)) #6x5x5x5x5=750 celdas
-(sort(auxMeans)) #421/750= 0.56 proporción de celdas no vacías.
-sum(is.na(Means)) #329 celdas vacías
-sum(is.na(Vars))  #422 celdas vacías.
+(sort(auxMeans)) #421/750= 0.56 proporciÃ³n de celdas no vacÃ­as.
+sum(is.na(Means)) #329 celdas vacÃ­as
+sum(is.na(Vars))  #422 celdas vacÃ­as.
 
-#-------Categorías o niveles de referencia--------
+#-------CategorÃ­as o niveles de referencia--------
 
-#Inspeccionemos las categorías de referencia de cada factor.
-#Por default será la primer categoría en orden alfabético.
+#Inspeccionemos las categorÃ­as de referencia de cada factor.
+#Por default serÃ¡ la primer categorÃ­a en orden alfabÃ©tico.
 contrasts(crashB[,2]) # la uno: "1"
 contrasts(crashB[,3]) # DRIVEWAY
 contrasts(crashB[,4]) # ONE-WAY:
 contrasts(crashB[,5]) # NONE
 
-#------Selección del modelo-------
+#------SelecciÃ³n del modelo-------
 
-#El histograma de Y muestra una distribución asimétrica.
-#La gráfica de dispersión, medias vs varianza de Y, 
+#El histograma de Y muestra una distribuciÃ³n asimÃ©trica.
+#La grÃ¡fica de dispersiÃ³n, medias vs varianza de Y, 
 #muestra una varianza no constante respecto a la maedia.
-# Sugieren una transformación en Y, probemos boxcox() o Log.
+# Sugieren una transformaciÃ³n en Y, probemos boxcox() o Log.
 
 par(mfrow=c(1,1))
 bc=boxcox(Crash_Score~., data=crashB)
 (lambda=bc$x[which.max(bc$y)]) # lambda=.26
 
-#Exploremos la transformación sugerida por boxcox() y la log(y).
+#Exploremos la transformaciÃ³n sugerida por boxcox() y la log(y).
 m=list()
 m[[1]]= lm(Crash_Score~., data=crashB)
 m[[2]]= lm((Crash_Score^lambda-1)/lambda ~., data=crashB)
@@ -127,14 +127,14 @@ m[[4]]= lm(log(Crash_Score+.1)~., data=crashB)
 for(i in 1:4) print(summary((m[[i]]))$r.squared)
 for(i in 1:4) print(AIC(m[[i]]))
 for(i in 1:4) print(BIC(m[[i]]))
-#Podríamos ver el error de entrenamiento de cada  modelo,
-#pero Y no están en la misma escala.
+#PodrÃ­amos ver el error de entrenamiento de cada  modelo,
+#pero Y no estÃ¡n en la misma escala.
 for(i in 1:4) print(mean(residuals(m[[i]])^2))
 #Para compararlos habremos de  calcularlos en la misma escala.
 
 summary(crashB$Crash_Score)
 
-#Veamos la gráfica q-q de de cada modelo:
+#Veamos la grÃ¡fica q-q de de cada modelo:
 dev.off()
 par(mfrow=c(2,2))
 plot(m[[1]], which=2, pch=19, cex=.25)
@@ -145,13 +145,13 @@ plot(m[[4]], which=2, pch=19, cex=.25)
 #Seleciono el modelo m[[3]]
 print(summary(m[[3]]), digits=2)
 
-#------Agrupación de categorías dentro de un factor-----
+#------AgrupaciÃ³n de categorÃ­as dentro de un factor-----
 
 #Veamos las etiquetas y contrastes de los factores
 
-levels(crashB[,3])    #categorías o niveles
-contrasts(crashB[,3]) #DRVEWAY es la categoría de referencia
-table(crashB[,3])     #Distribución de las observaciones de acuerdo a un factor 
+levels(crashB[,3])    #categorÃ­as o niveles
+contrasts(crashB[,3]) #DRVEWAY es la categorÃ­a de referencia
+table(crashB[,3])     #DistribuciÃ³n de las observaciones de acuerdo a un factor 
 
 #Podemos modificar el nivel de referencia de forma temporal
 #o de forma permanente. E.g.:
@@ -171,32 +171,32 @@ contrasts(crashB[,3])
 
 #Inspeccionemos los coeficientes del modelo original
 #en summary(m[[3]]). Ver tabla auxiliar.
-#Agregaremos las categorías o niveles (levels) cuyos coeficientes 
-#son estadísticamente iguales entre sí, o estadísticamente 
-#iguales al coeficiente de la categoría de referencia (a cero). 
+#Agregaremos las categorÃ­as o niveles (levels) cuyos coeficientes 
+#son estadÃ­sticamente iguales entre sÃ­, o estadÃ­sticamente 
+#iguales al coeficiente de la categorÃ­a de referencia (a cero). 
 
 
-#Agregaremos algunas categorías o niveles de cada factor, uno por uno
+#Agregaremos algunas categorÃ­as o niveles de cada factor, uno por uno
 #y compararemos la RSS de los modelos, el del reducido vs  el del original,
 #y el del reducido vs el del que le antecede: 
 
 table(crashB[,2])
-levels(crashB[,2])[3:5]="Time_of_Day345" #agregamos tres categorías.
+levels(crashB[,2])[3:5]="Time_of_Day345" #agregamos tres categorÃ­as.
 table(crashB[,2])
 
 #Ajustamos el modelo
 m[[5]]= lm(Crash_Score^lambda ~., data=crashB)
-anova(m[[3]], m[[5]]) #No se rechaza la hipótesis
-#H_o:los parámetros adicionales son cero.
+anova(m[[3]], m[[5]]) #No se rechaza la hipÃ³tesis
+#H_o:los parÃ¡metros adicionales son cero.
 #Nos quedamos con el modelo reducido,
-#el que tiene las categorías agregadas,
+#el que tiene las categorÃ­as agregadas,
 #tiene menos variables dummy que el no reducido.
 
 print(summary(m[[5]]), digits=2)
 drop1(m[[3]], test="F")
 drop1(m[[5]], test="F")
 
-#Continuamos agrupando categorías del siguiente factor:
+#Continuamos agrupando categorÃ­as del siguiente factor:
 contrasts(crashB[,3])
 table(crashB[,3])
 levels(crashB[,3])[c(1,3,4)]="Rd_FeatDriveNoneOther"
@@ -217,26 +217,26 @@ anova(m[[7]], m[[6]])
 anova(m[[3]], m[[7]])
 summary(m[[7]])
 
-#último factor
+#Ãºltimo factor
 table(crashB[,5])
 contrasts(crashB[,5])
 levels(crashB[,5])
 levels(crashB[,5])[c(1,2,5)]="Trf_ContNoneOtherYield"
 table(crashB[,5]) 
-contrasts(crashB[,5]) #Observe que las categorías se renumerarón
+contrasts(crashB[,5]) #Observe que las categorÃ­as se renumerarÃ³n
 levels(crashB[,5])[c(2,3)]="Trf_ContSigStopSig"
 table(crashB[,5]) 
-contrasts(crashB[,5]) #Observe que las categorías se renumerarón
+contrasts(crashB[,5]) #Observe que las categorÃ­as se renumerarÃ³n
 
 m[[8]]= lm(Crash_Score^lambda ~., data=crashB)
-anova(m[[7]], m[[8]]) #la reducción en RSS no es estadísticamente significativa
+anova(m[[7]], m[[8]]) #la reducciÃ³n en RSS no es estadÃ­sticamente significativa
 #nos quedamos con el modelo reducido.
 anova(m[[3]], m[[8]])
 
 #---Modelo final recategorizado-----
 
 #El modelo m[[8]] corresponde al modelo m[[3]] 
-#con categorías agrupadas en sus factores:
+#con categorÃ­as agrupadas en sus factores:
 
 summary(m[[3]])$r.square;summary(m[[8]])$r.square
 summary(m[[3]])$adj.r.square;summary(m[[8]])$adj.r.square
@@ -247,21 +247,23 @@ plot(m[[3]], which=2, pch=19, cex=.25)
 plot(m[[8]], which=2, pch=19, cex=.25)
 
 #El modelo m[[3]] y el m[[8]] tienen un poder predictivo similar,
-# sólo difieren en el número de categorías en cada factor.
+# sÃ³lo difieren en el nÃºmero de categorÃ­as en cada factor.
 
-#El agrupamiento de categorías se realizó atendiendo únicamente
-#aspectos metodológicos -la igualdad estadística de coeficientes.
-#En la práctica también deben ser atendidos aspectos contextuales
+#El agrupamiento de categorÃ­as se realizÃ³ atendiendo Ãºnicamente
+#aspectos metodolÃ³gicos -la igualdad estadÃ­stica de coeficientes.
+#En la prÃ¡ctica tambiÃ©n deben ser atendidos aspectos contextuales
 # (subject matter).
 
-#La estrategia seguida para el agrupamiento de las categorías
-#desde luego que no es única.
+#La estrategia seguida para el agrupamiento de las categorÃ­as
+#desde luego que no es Ãºnica.
 
-#Nota técnica: Puede optar por trabajar con una copia de la base de datos,
-#al agrupar categorías ya no es posible desagruparlas.
+#Nota tÃ©cnica: Puede optar por trabajar con una copia de la base de datos,
+#al agrupar categorÃ­as ya no es posible desagruparlas.
 
 #Referencia auxiliar: "Statistics. An introduction using R", M.J. Crawley. Second ed. Wiley,2015.
 #Chapter 11 Contrasts.
+
+##QuÃ© padre tu proyecto y todo eh
 #------Fin-----------
 
 
